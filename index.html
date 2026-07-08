@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="day">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>钟洁玟 · 她的小世界</title>
+<meta name="description" content="钟洁玟 · 古灵精怪 · 引导型 · 恋人妈妈 —— 一个可离线打开的个人小世界">
+<style>
+/* ============================================================
+   钟洁玟 · 她的小世界
+   离线单文件页面 —— 双击即开，断网可用
+   关键词：古灵精怪 · 引导型 · 恋人妈妈
+   ============================================================ */
+
+:root{
+  --bg:        #faf5ee;
+  --bg-soft:   #f3e9dd;
+  --card:      #fffdfa;
+  --ink:       #4b3a34;
+  --ink-soft:  #8a7268;
+  --rose:      #e29aa2;
+  --rose-deep: #cf7d88;
+  --sage:      #a9c3a4;
+  --gold:      #e3bd77;
+  --line:      rgba(139,114,104,.18);
+  --shadow:    0 18px 50px -22px rgba(120,80,70,.35);
+  --radius:    26px;
+  --font-serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --font-sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Heiti SC",sans-serif;
+  --maxw:1040px;
+}
+html[data-theme="night"]{
+  --bg:        #201a2b;
+  --bg-soft:   #2a2238;
+  --card:      #2c2440;
+  --ink:       #f2e7f2;
+  --ink-soft:  #c3b3cf;
+  --rose:      #e9a3c0;
+  --rose-deep: #f2b7d0;
+  --sage:      #8fb6a6;
+  --gold:      #f0d08a;
+  --line:      rgba(240,225,240,.16);
+  --shadow:    0 22px 60px -20px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-sans);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 12% -8%, rgba(226,154,162,.20), transparent 60%),
+    radial-gradient(1000px 700px at 105% 10%, rgba(169,195,164,.22), transparent 55%),
+    var(--bg);
+  line-height:1.85;
+  overflow-x:hidden;
+  transition:background .6s ease,color .5s ease;
+  cursor:default;
+}
+
+/* ---------- 装饰画布 ---------- */
+#petals{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.spark{position:fixed;pointer-events:none;z-index:9999;font-size:14px;will-change:transform,opacity;
+  animation:sparkfloat .9s ease-out forwards}
+@keyframes sparkfloat{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.6) rotate(0)}
+  100%{opacity:0;transform:translate(-50%,-140%) scale(1.2) rotate(25deg)}
+}
+
+/* ---------- 顶部导航 ---------- */
+header.nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(12px);
+  background:color-mix(in srgb,var(--bg) 72%, transparent);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{max-width:var(--maxw);margin:0 auto;padding:14px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-weight:700;letter-spacing:.06em}
+.brand .dot{width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,var(--rose),var(--rose-deep));
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--rose) 30%,transparent)}
+.nav-links{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--ink-soft);text-decoration:none;font-size:14px;padding:6px 11px;border-radius:999px;transition:.25s}
+.nav-links a:hover{color:var(--ink);background:color-mix(in srgb,var(--rose) 22%,transparent)}
+.theme-btn{border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;transition:.25s;font-family:var(--font-sans)}
+.theme-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+
+/* ---------- 通用容器 ---------- */
+section{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:86px 22px}
+.eyebrow{font-size:13px;letter-spacing:.32em;color:var(--rose-deep);text-transform:uppercase;margin-bottom:14px}
+.h2{font-family:var(--font-serif);font-size:clamp(26px,4.4vw,40px);line-height:1.3;margin-bottom:18px;font-weight:700}
+.lead{color:var(--ink-soft);max-width:60ch}
+
+/* 滚动揭示 */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- Hero ---------- */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding-top:40px;padding-bottom:60px}
+.hero-kw{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+.hero-kw span{font-size:13px;padding:7px 16px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink-soft);box-shadow:var(--shadow)}
+.hero h1{font-family:var(--font-serif);font-weight:800;line-height:1.02;
+  font-size:clamp(56px,14vw,150px);letter-spacing:.02em;
+  background:linear-gradient(120deg,var(--rose-deep),var(--gold) 55%,var(--sage));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 8px 20px rgba(207,125,136,.18))}
+.hero .romaji{font-family:var(--font-serif);font-style:italic;color:var(--ink-soft);
+  font-size:clamp(18px,3vw,26px);margin-top:6px;letter-spacing:.14em}
+.hero p.tag{margin-top:22px;font-size:clamp(16px,2.4vw,20px);max-width:34ch;color:var(--ink)}
+.hero-meta{margin-top:30px;display:flex;gap:26px;flex-wrap:wrap;color:var(--ink-soft);font-size:14px}
+.hero-meta b{color:var(--ink);font-family:var(--font-serif)}
+.scroll-hint{margin-top:52px;display:inline-flex;align-items:center;gap:10px;color:var(--ink-soft);font-size:13px;letter-spacing:.16em}
+.scroll-hint .m{width:22px;height:36px;border:2px solid var(--ink-soft);border-radius:14px;position:relative}
+.scroll-hint .m::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;border-radius:2px;
+  background:var(--rose-deep);transform:translateX(-50%);animation:mouse 1.6s infinite}
+@keyframes mouse{0%{opacity:0;transform:translate(-50%,0)}40%{opacity:1}100%{opacity:0;transform:translate(-50%,12px)}}
+
+/* ---------- 关于 & 关键词卡 ---------- */
+.grid-about{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:start}
+@media(max-width:820px){.grid-about{grid-template-columns:1fr}}
+.about-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px;box-shadow:var(--shadow)}
+.kw-list{display:grid;gap:14px;margin-top:6px}
+.kw{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--card);transition:.3s}
+.kw summary{list-style:none;cursor:pointer;padding:18px 20px;display:flex;align-items:center;gap:14px;font-family:var(--font-serif);font-size:19px}
+.kw summary::-webkit-details-marker{display:none}
+.kw summary .ico{font-size:24px}
+.kw summary .plus{margin-left:auto;color:var(--rose-deep);transition:.3s}
+.kw[open] summary .plus{transform:rotate(45deg)}
+.kw .body{padding:0 20px 20px 58px;color:var(--ink-soft)}
+.kw:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+
+/* ---------- 时光轴 ---------- */
+.timeline{position:relative;margin-top:20px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(var(--rose),var(--sage))}
+.t-item{position:relative;padding:0 0 30px 24px}
+.t-item::before{content:"";position:absolute;left:-6px;top:4px;width:14px;height:14px;border-radius:50%;
+  background:var(--card);border:3px solid var(--rose-deep);box-shadow:0 0 0 5px color-mix(in srgb,var(--rose) 22%,transparent)}
+.t-date{font-family:var(--font-serif);color:var(--rose-deep);font-weight:700;font-size:15px}
+.t-title{font-weight:600;margin-top:2px}
+.t-desc{color:var(--ink-soft);font-size:14.5px}
+
+/* ---------- 相册 ---------- */
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+@media(max-width:640px){.gallery{grid-template-columns:1fr}}
+figure.shot{margin:0;border-radius:var(--radius);overflow:hidden;position:relative;
+  border:1px solid var(--line);box-shadow:var(--shadow);cursor:pointer;background:var(--card);
+  aspect-ratio:4/5;transition:.35s}
+figure.shot:hover{transform:translateY(-4px) rotate(-.4deg)}
+figure.shot img{width:100%;height:100%;object-fit:cover;display:block}
+figure.shot .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;text-align:center;padding:24px;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--rose) 26%,var(--card)),color-mix(in srgb,var(--sage) 30%,var(--card)))}
+figure.shot .ph .big{font-size:46px}
+figure.shot .ph small{color:var(--ink-soft);font-size:12px;letter-spacing:.1em}
+figure.shot figcaption{position:absolute;left:0;right:0;bottom:0;padding:20px 18px 16px;
+  background:linear-gradient(transparent,rgba(30,20,25,.72));color:#fff;
+  font-size:14px;opacity:0;transform:translateY(10px);transition:.35s}
+figure.shot:hover figcaption{opacity:1;transform:none}
+figure.shot figcaption b{font-family:var(--font-serif);display:block;font-size:16px;margin-bottom:2px}
+
+/* 灯箱 */
+.lightbox{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
+  background:rgba(25,16,22,.82);backdrop-filter:blur(6px);padding:24px}
+.lightbox.on{display:flex}
+.lightbox .frame{max-width:560px;width:100%;background:var(--card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+.lightbox .frame .pic{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;font-size:70px;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--rose) 30%,var(--card)),color-mix(in srgb,var(--sage) 34%,var(--card)))}
+.lightbox .frame img{width:100%;display:block}
+.lightbox .cap{padding:18px 22px}
+.lightbox .cap b{font-family:var(--font-serif);font-size:18px}
+.lightbox .cap p{color:var(--ink-soft);font-size:14px;margin-top:4px}
+.lightbox .close{position:absolute;top:18px;right:22px;font-size:30px;color:#fff;cursor:pointer;line-height:1}
+
+/* ---------- 悄悄话互动 ---------- */
+.whisper-wrap{background:
+  radial-gradient(700px 320px at 20% 0%,color-mix(in srgb,var(--rose) 26%,transparent),transparent 60%),
+  var(--card);
+  border:1px solid var(--line);border-radius:calc(var(--radius) + 6px);padding:40px 32px;box-shadow:var(--shadow);text-align:center}
+.whisper-avatar{width:82px;height:82px;border-radius:50%;margin:0 auto 18px;
+  background:radial-gradient(circle at 32% 30%,var(--rose),var(--rose-deep));
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  box-shadow:0 0 0 8px color-mix(in srgb,var(--rose) 22%,transparent);animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.whisper-text{font-family:var(--font-serif);font-size:clamp(19px,3.2vw,26px);min-height:2.6em;
+  max-width:26ch;margin:0 auto 24px;line-height:1.6}
+.whisper-text .cursor{display:inline-block;width:2px;background:var(--rose-deep);animation:blink 1s steps(1) infinite;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.btn{border:none;border-radius:999px;padding:13px 30px;font-size:15px;cursor:pointer;font-family:var(--font-sans);
+  color:#fff;background:linear-gradient(120deg,var(--rose-deep),var(--gold));box-shadow:var(--shadow);
+  transition:.25s;letter-spacing:.04em}
+.btn:hover{transform:translateY(-2px) scale(1.02)}
+.btn:active{transform:scale(.97)}
+.whisper-mode{display:flex;gap:8px;justify-content:center;margin-bottom:22px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:transparent;color:var(--ink-soft);border-radius:999px;
+  padding:7px 16px;font-size:13px;cursor:pointer;transition:.25s;font-family:var(--font-sans)}
+.chip.active{background:color-mix(in srgb,var(--rose) 26%,transparent);color:var(--ink);border-color:transparent}
+
+/* ---------- 心动值 ---------- */
+.heart-hud{position:fixed;right:18px;bottom:18px;z-index:80;
+  background:var(--card);border:1px solid var(--line);border-radius:999px;
+  padding:10px 16px;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow);font-size:14px;user-select:none}
+.heart-hud .hh{font-size:19px;animation:beat 1.4s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(1.25)}45%{transform:scale(1)}}
+.heart-hud b{font-family:var(--font-serif);color:var(--rose-deep);min-width:2ch;text-align:center}
+
+/* ---------- 插曲（争议）板块 ---------- */
+.episode{background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow)}
+.episode h3{font-family:var(--font-serif);font-size:22px;margin-bottom:10px}
+.episode p{color:var(--ink-soft);font-size:15px;margin-bottom:10px}
+.episode .src{font-size:12.5px;color:var(--ink-soft);opacity:.8;margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.episode details{margin-top:8px}
+.episode summary{cursor:pointer;color:var(--rose-deep);font-size:14px}
+
+/* ---------- 页脚 ---------- */
+footer{position:relative;z-index:2;text-align:center;padding:70px 22px 60px;color:var(--ink-soft)}
+footer .fh{font-family:var(--font-serif);font-size:clamp(24px,5vw,44px);
+  background:linear-gradient(120deg,var(--rose-deep),var(--sage));-webkit-background-clip:text;background-clip:text;color:transparent}
+footer a.wb{display:inline-flex;align-items:center;gap:8px;margin-top:20px;text-decoration:none;
+  color:#fff;background:linear-gradient(120deg,#ff8aa8,#ffbf7a);padding:12px 26px;border-radius:999px;box-shadow:var(--shadow);transition:.25s}
+footer a.wb:hover{transform:translateY(-2px)}
+footer .fine{margin-top:26px;font-size:12px;opacity:.75;max-width:52ch;margin-left:auto;margin-right:auto}
+
+/* 隐藏彩蛋提示 */
+.hint{font-size:12px;color:var(--ink-soft);opacity:.7;margin-top:10px}
+</style>
+</head>
+<body>
+
+<canvas id="petals"></canvas>
+
+<!-- 导航 -->
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="dot"></span>钟洁玟</div>
+    <nav class="nav-links">
+      <a href="#about">关于她</a>
+      <a href="#journey">时光轴</a>
+      <a href="#gallery">相册</a>
+      <a href="#whisper">悄悄话</a>
+      <a href="#episode">小插曲</a>
+      <button class="theme-btn" id="themeBtn">🌙 月光</button>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="hero-kw reveal">
+    <span>古灵精怪</span><span>引导型</span><span>恋人妈妈</span>
+  </div>
+  <h1 class="reveal">钟洁玟</h1>
+  <div class="romaji reveal">Zhōng Jiéwén ·「她会牵着你走进来」</div>
+  <p class="tag reveal">半是恋人的心动，半是妈妈的照顾。<br>她古灵精怪，却总在你走神时轻轻把你拉回来。</p>
+  <div class="hero-meta reveal">
+    <div>生日 · <b>2003.06.05</b></div>
+    <div>出生地 · <b>广东</b></div>
+    <div>身份 · <b>偶像 / 女歌手</b></div>
+  </div>
+  <div class="scroll-hint reveal"><span class="m"></span> 跟着我，往下看</div>
+</section>
+
+<!-- 关于 -->
+<section id="about">
+  <div class="grid-about">
+    <div class="reveal">
+      <div class="eyebrow">About Her</div>
+      <h2 class="h2">她是那种<br>又飒又软的女孩</h2>
+      <p class="lead">2003 年出生于广东，从 GNZ48 十三期生一路走到聚光灯下。台上她是会发光的偶像，台下她古灵精怪、爱笑爱闹；对喜欢她的人，她又格外温柔——像恋人，也像妈妈，把你照顾得妥妥帖帖。</p>
+      <p class="lead" style="margin-top:14px">这一页，是把她的三个关键词、走过的路和几帧生活，安放成一个可以随时打开的小世界。点开下面的关键词，看看"恋人妈妈"到底是什么意思。</p>
+    </div>
+    <div class="about-card reveal">
+      <div class="kw-list">
+        <details class="kw" open>
+          <summary><span class="ico">🧚</span>古灵精怪<span class="plus">＋</span></summary>
+          <div class="body">脑袋里像装了小烟花，前一秒认真，下一秒就冒出鬼点子。和她待在一起，你永远猜不到下一句话，但一定会笑出声。</div>
+        </details>
+        <details class="kw">
+          <summary><span class="ico">🧭</span>引导型<span class="plus">＋</span></summary>
+          <div class="body">不催不逼，只是轻轻牵着你的手："这边走，跟着我。"你走神、你犹豫，她总能不动声色地把你带回正轨。</div>
+        </details>
+        <details class="kw">
+          <summary><span class="ico">💗</span>恋人妈妈<span class="plus">＋</span></summary>
+          <div class="body">一半是心动的恋人，一半是操心的妈妈。会撒娇也会叮嘱你多喝水、早点睡——被这样爱着，是会上瘾的。</div>
+        </details>
+      </div>
+      <p class="hint">小提示：页面里藏着一些会动的小惊喜，试着到处点点看 ✨</p>
+    </div>
+  </div>
+</section>
+
+<!-- 时光轴 -->
+<section id="journey">
+  <div class="eyebrow reveal">Her Journey</div>
+  <h2 class="h2 reveal">她走过的路</h2>
+  <p class="lead reveal">下面是根据公开资料整理的一条时间线，记录她一路的身份变化。</p>
+  <div class="timeline">
+    <div class="t-item reveal"><div class="t-date">2022.10.02</div><div class="t-title">成为 GNZ48 十三期生</div><div class="t-desc">正式踏进偶像的世界，从练习生开始发光。</div></div>
+    <div class="t-item reveal"><div class="t-date">2023.06.02</div><div class="t-title">移籍 CGT48 Team CII</div><div class="t-desc">迎来新的舞台与队伍。</div></div>
+    <div class="t-item reveal"><div class="t-date">2023.08.05</div><div class="t-title">十周年盛典 · 《Be my POI》</div><div class="t-desc">在丝芭家族十周年演唱会亮相，获新人 TOP16 第 5 名。</div></div>
+    <div class="t-item reveal"><div class="t-date">2024.06.08</div><div class="t-title">从 CGT48 请辞</div><div class="t-desc">告别这段旅程，去往下一站。</div></div>
+    <div class="t-item reveal"><div class="t-date">2024.08.25</div><div class="t-title">化名「钟沅芫」加入 Arena</div><div class="t-desc">加入由莫寒创立的女团，开启新的女团生涯。</div></div>
+  </div>
+</section>
+
+<!-- 相册 -->
+<section id="gallery">
+  <div class="eyebrow reveal">Gallery</div>
+  <h2 class="h2 reveal">几帧她</h2>
+  <p class="lead reveal" style="margin-bottom:34px">四个瞬间，四种她。把鼠标放上去看看她当时的心情，点一下可以放大。</p>
+  <div class="gallery">
+    <figure class="shot reveal" data-i="0">
+      <img src="assets/photo1.jpg" alt="餐厅里的她" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="ph" style="display:flex"><span class="big">🥤</span><small>photo1.jpg</small><small>把照片放进 assets/ 即显示</small></div>
+      <figcaption><b>慵懒下午</b>撑着脸颊吸一口饮料，恋人感拉满的松弛瞬间。</figcaption>
+    </figure>
+    <figure class="shot reveal" data-i="1">
+      <img src="assets/photo2.jpg" alt="乐园里的她" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="ph" style="display:flex"><span class="big">🎢</span><small>photo2.jpg</small><small>把照片放进 assets/ 即显示</small></div>
+      <figcaption><b>元气一日游</b>阳光下的乐园，抬手遮光，俏皮又鲜活。</figcaption>
+    </figure>
+    <figure class="shot reveal" data-i="2">
+      <img src="assets/photo3.jpg" alt="室内的她" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="ph" style="display:flex"><span class="big">🌼</span><small>photo3.jpg</small><small>把照片放进 assets/ 即显示</small></div>
+      <figcaption><b>又飒又酷</b>白色上衣配印花裹裙，双手叉腰的小女王气场。</figcaption>
+    </figure>
+    <figure class="shot reveal" data-i="3">
+      <img src="assets/photo4.jpg" alt="花下的她" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="ph" style="display:flex"><span class="big">🌿</span><small>photo4.jpg</small><small>把照片放进 assets/ 即显示</small></div>
+      <figcaption><b>花下透明伞</b>细雨、小白花、透明伞——最古灵精怪的清纯一帧。</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 悄悄话互动 -->
+<section id="whisper">
+  <div class="whisper-wrap reveal">
+    <div class="whisper-avatar">💬</div>
+    <div class="eyebrow" style="margin-bottom:8px">恋人妈妈的悄悄话</div>
+    <div class="whisper-mode">
+      <button class="chip active" data-mode="lover">恋人模式</button>
+      <button class="chip" data-mode="mom">妈妈模式</button>
+      <button class="chip" data-mode="quirky">古灵精怪</button>
+    </div>
+    <div class="whisper-text" id="whisperText">点一下下面的按钮，听听她想对你说什么<span class="cursor">&nbsp;</span></div>
+    <button class="btn" id="whisperBtn">她想对我说……</button>
+    <p class="hint">每一次都不一样哦，多点几次看看 💞</p>
+  </div>
+</section>
+
+<!-- 小插曲（争议，克制中立处理） -->
+<section id="episode">
+  <div class="episode reveal">
+    <div class="eyebrow">A Chapter · 时间线里的一段插曲</div>
+    <h3>关于 2023 年秋天的那段风波</h3>
+    <p>没有谁的成长是一条直线。根据公开报道，2023 年 9 月，运营方公告称她"严重违反《SNH48 集团成员管理守则》"，先将其降为预备生，随后调整为取消正式成员身份、暂停工作与官方账号。</p>
+    <p>公开信息止于"违规"这样的措辞，并未披露更多细节；因此这里也只做客观记录，不揣测、不评判。真正重要的，是她后来重新出发、继续在喜欢的舞台上发光——这才是这条时间线的下一页。</p>
+    <details>
+      <summary>为什么要把这一段也放进来？</summary>
+      <p style="margin-top:10px">因为真实比完美更动人。一个人的故事里有高光也有低谷，坦然收下它，才更像一个立体的、值得被喜欢的人。</p>
+    </details>
+    <div class="src">资料来源：百度百科 / 维基百科「CGT48」公开词条（截至制作时）。如与最新事实有出入，以官方与本人最新公告为准。</div>
+  </div>
+</section>
+
+<footer>
+  <div class="fh">愿你被温柔地引导，被认真地喜欢。</div>
+  <a class="wb" href="https://weibo.com/u/7944565752" target="_blank" rel="noopener">🌸 去她的微博看看</a>
+  <p class="fine">本页为粉丝向非官方作品，仅用于表达喜爱与祝福。全部文字基于公开资料整理，照片请放入 assets/ 文件夹（photo1~4.jpg），版权归原作者/本人所有。</p>
+</footer>
+
+<!-- 心动值 HUD -->
+<div class="heart-hud" id="heartHud" title="到处点点，心动值会涨哦">
+  <span class="hh">💗</span>心动值 <b id="heartVal">0</b>
+</div>
+
+<!-- 灯箱 -->
+<div class="lightbox" id="lightbox">
+  <span class="close" id="lbClose">×</span>
+  <div class="frame">
+    <div class="pic" id="lbPic"><img id="lbImg" alt="" style="display:none"><span id="lbEmoji">🌸</span></div>
+    <div class="cap"><b id="lbTitle"></b><p id="lbDesc"></p></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   互动脚本 —— 全部离线，无外部依赖
+   ============================================================ */
+(function(){
+  "use strict";
+
+  /* ---------- 心动值 ---------- */
+  var heart = 0;
+  var heartVal = document.getElementById('heartVal');
+  function addHeart(n){
+    heart += (n||1);
+    heartVal.textContent = heart;
+    heartVal.animate([{transform:'scale(1.6)'},{transform:'scale(1)'}],{duration:280,easing:'ease-out'});
+  }
+
+  /* ---------- 主题切换 白日/月光 ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', function(){
+    var html = document.documentElement;
+    var night = html.getAttribute('data-theme') === 'night';
+    html.setAttribute('data-theme', night ? 'day' : 'night');
+    themeBtn.textContent = night ? '🌙 月光' : '☀️ 白日';
+    addHeart(1);
+  });
+
+  /* ---------- 滚动揭示 ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.14});
+  document.querySelectorAll('.reveal').forEach(function(el, i){
+    el.style.transitionDelay = (Math.min(i,6)*60) + 'ms';
+    io.observe(el);
+  });
+
+  /* ---------- 花瓣画布 ---------- */
+  var canvas = document.getElementById('petals');
+  var ctx = canvas.getContext('2d');
+  var W, H, petals = [];
+  function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  resize(); addEventListener('resize', resize);
+  var COLORS = ['#f4b8c0','#f7d29a','#bcd8b6','#f2c6d6'];
+  function Petal(){
+    this.reset(true);
+  }
+  Petal.prototype.reset = function(init){
+    this.x = Math.random()*W;
+    this.y = init ? Math.random()*H : -20;
+    this.r = 5 + Math.random()*8;
+    this.s = .4 + Math.random()*1.1;         // fall speed
+    this.sway = Math.random()*Math.PI*2;
+    this.swaySpeed = .01 + Math.random()*.02;
+    this.rot = Math.random()*Math.PI;
+    this.rotSpeed = (Math.random()-.5)*.03;
+    this.c = COLORS[(Math.random()*COLORS.length)|0];
+    this.o = .5 + Math.random()*.4;
+  };
+  Petal.prototype.step = function(){
+    this.y += this.s;
+    this.sway += this.swaySpeed;
+    this.x += Math.sin(this.sway)*.6;
+    this.rot += this.rotSpeed;
+    if(this.y > H+20) this.reset(false);
+  };
+  Petal.prototype.draw = function(){
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rot);
+    ctx.globalAlpha = this.o;
+    ctx.fillStyle = this.c;
+    ctx.beginPath();
+    // 花瓣形（两段贝塞尔）
+    ctx.moveTo(0, -this.r);
+    ctx.quadraticCurveTo(this.r, 0, 0, this.r);
+    ctx.quadraticCurveTo(-this.r, 0, 0, -this.r);
+    ctx.fill();
+    ctx.restore();
+  };
+  var count = innerWidth < 640 ? 26 : 46;
+  for(var i=0;i<count;i++) petals.push(new Petal());
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<petals.length;i++){ petals[i].step(); petals[i].draw(); }
+    requestAnimationFrame(loop);
+  })();
+
+  /* ---------- 光标爱心/星星尾迹（古灵精怪） ---------- */
+  var GLYPHS = ['✨','💗','🌸','⭐','🍃'];
+  var lastSpark = 0;
+  addEventListener('pointermove', function(e){
+    var now = Date.now();
+    if(now - lastSpark < 60) return;          // 节流
+    lastSpark = now;
+    var s = document.createElement('span');
+    s.className = 'spark';
+    s.textContent = GLYPHS[(Math.random()*GLYPHS.length)|0];
+    s.style.left = e.clientX + 'px';
+    s.style.top  = e.clientY + 'px';
+    document.body.appendChild(s);
+    setTimeout(function(){ s.remove(); }, 900);
+  }, {passive:true});
+
+  /* ---------- 悄悄话生成器 ---------- */
+  var LINES = {
+    lover: [
+      "在想我吗？我可是一直在想你哦。",
+      "今天也要乖乖的，我的宝贝。",
+      "别熬夜了，我陪你，但你得先睡。",
+      "把烦心事都给我，剩下的交给我来哄。",
+      "你笑起来的样子，是我今天最喜欢的风景。",
+      "累了就靠过来一点，我在这儿呢。",
+      "无论你走多远，转身我都在原地等你。"
+    ],
+    mom: [
+      "喝水了吗？现在，马上，去喝一口。",
+      "饭要好好吃，别老是随便对付自己。",
+      "外面凉，出门记得加件外套，听话。",
+      "做得已经很好啦，剩下的慢慢来，别急。",
+      "手机放下，眼睛也要休息一会儿哦。",
+      "不管多晚回来，都记得给我报个平安。",
+      "你已经很努力了，妈妈都看在眼里。"
+    ],
+    quirky: [
+      "叮！你已被本仙女的可爱值锁定，无法逃脱。",
+      "偷偷告诉你，我今天又想到一个坏主意，嘿嘿。",
+      "接住这颗小烟花——啵！心情+100。",
+      "我掐指一算，你今天会遇到一件开心事。",
+      "别东张西望啦，这一页最好看的就是……我呀。",
+      "施法中……愿你今晚做个甜甜的梦，成功！",
+      "抓到你在发呆！罚你笑一个，快点。"
+    ]
+  };
+  var mode = 'lover';
+  document.querySelectorAll('.chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active')});
+      chip.classList.add('active');
+      mode = chip.getAttribute('data-mode');
+      addHeart(1);
+    });
+  });
+
+  var wt = document.getElementById('whisperText');
+  var typing = null;
+  function typeOut(str){
+    if(typing) clearInterval(typing);
+    var i = 0;
+    wt.innerHTML = '<span class="cursor">&nbsp;</span>';
+    typing = setInterval(function(){
+      i++;
+      wt.innerHTML = str.slice(0,i).replace(/</g,'&lt;') + '<span class="cursor">&nbsp;</span>';
+      if(i >= str.length){ clearInterval(typing); typing=null; }
+    }, 55);
+  }
+  var lastIdx = -1;
+  document.getElementById('whisperBtn').addEventListener('click', function(){
+    var arr = LINES[mode];
+    var idx;
+    do { idx = (Math.random()*arr.length)|0; } while(arr.length>1 && idx===lastIdx);
+    lastIdx = idx;
+    typeOut(arr[idx]);
+    addHeart(2);
+  });
+
+  /* ---------- 灯箱 ---------- */
+  var DATA = [
+    {emoji:'🥤', title:'慵懒下午', desc:'撑着脸颊吸一口饮料，恋人感拉满的松弛瞬间。'},
+    {emoji:'🎢', title:'元气一日游', desc:'阳光下的乐园，抬手遮光，俏皮又鲜活。'},
+    {emoji:'🌼', title:'又飒又酷', desc:'白色上衣配印花裹裙，双手叉腰的小女王气场。'},
+    {emoji:'🌿', title:'花下透明伞', desc:'细雨、小白花、透明伞——最古灵精怪的清纯一帧。'}
+  ];
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lbImg');
+  var lbEmoji = document.getElementById('lbEmoji');
+  document.querySelectorAll('figure.shot').forEach(function(fig){
+    fig.addEventListener('click', function(){
+      var i = +fig.getAttribute('data-i');
+      var d = DATA[i];
+      document.getElementById('lbTitle').textContent = d.title;
+      document.getElementById('lbDesc').textContent = d.desc;
+      var realImg = fig.querySelector('img');
+      if(realImg && realImg.style.display !== 'none'){
+        lbImg.src = realImg.src; lbImg.style.display='block'; lbEmoji.style.display='none';
+      } else {
+        lbImg.style.display='none'; lbEmoji.style.display='block'; lbEmoji.textContent = d.emoji;
+      }
+      lb.classList.add('on');
+      addHeart(1);
+    });
+  });
+  function closeLb(){ lb.classList.remove('on'); }
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', function(e){ if(e.target === lb) closeLb(); });
+  addEventListener('keydown', function(e){ if(e.key === 'Escape') closeLb(); });
+
+  /* ---------- 关键词展开 & 头像点击也加心动 ---------- */
+  document.querySelectorAll('.kw summary, .whisper-avatar, .heart-hud').forEach(function(el){
+    el.addEventListener('click', function(){ addHeart(1); });
+  });
+
+  /* ---------- 彩蛋：连点标题 5 次触发花瓣暴雨 ---------- */
+  var tapCount = 0, tapTimer;
+  document.querySelector('.hero h1').addEventListener('click', function(){
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(function(){ tapCount = 0; }, 1200);
+    if(tapCount >= 5){
+      tapCount = 0;
+      for(var k=0;k<40;k++) petals.push(new Petal());
+      addHeart(10);
+      var tip = document.createElement('div');
+      tip.textContent = '🌸 花瓣暴雨！她在为你撒花～';
+      tip.style.cssText='position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:9999;'
+        +'background:linear-gradient(120deg,#cf7d88,#e3bd77);color:#fff;padding:12px 22px;border-radius:999px;'
+        +'box-shadow:0 18px 40px -18px rgba(0,0,0,.4);font-size:15px';
+      document.body.appendChild(tip);
+      setTimeout(function(){ tip.style.transition='opacity .6s'; tip.style.opacity='0'; }, 1600);
+      setTimeout(function(){ tip.remove(); if(petals.length>90) petals.length=60; }, 2400);
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
